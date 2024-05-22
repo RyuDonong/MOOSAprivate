@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	
+	<entry key="listCount">
+		SELECT COUNT(*) COUNT
+		FROM REVIEWBOARD
+		WHERE STATUS='Y'
+	</entry>
+	
+	<entry key="selectList">
+		SELECT * 
+		FROM (
+		        SELECT ROWNUM RNUM,S.* 
+		        FROM (SELECT BOARD_NO
+		              ,CATEGORY_NAME
+		              ,BOARD_TITLE
+		              ,USER_ID
+		              ,COUNT
+		              ,CREATE_DATE
+		                FROM REVIEWBOARD B
+		                LEFT JOIN REVIEW_CATEGORY USING(CATEGORY_NO)
+		                JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+		                WHERE B.STATUS = 'Y'
+		                ORDER BY CREATE_DATE DESC) S)
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectCategoryList">
+		SELECT CATEGORY_NO
+			  ,CATEGORY_NAME
+		FROM REVIEW_CATEGORY
+	</entry>
+	
+	<entry key="selectBoardNo">
+		SELECT SEQ_BNO.NEXTVAL BNO
+		FROM DUAL
+	</entry>
+	
+	<entry key="insertBoard">
+		INSERT INTO REVIEWBOARD(BOARD_WRITER
+						 ,CATEGORY_NO
+						 ,BOARD_NO
+						 ,BOARD_TITLE
+						 ,BOARD_CONTENT)
+	            VALUES(?
+	            	   ,?
+	            	   ,?
+	            	   ,?
+	            	   ,?)
+	
+	</entry>
+	
+	
+	
+	
+	
+	<entry key="insertAttachment">
+		INSERT INTO ATTACHMENT(FILE_NO
+		                      ,REF_NO
+		                      ,FILE_NAME
+		                      ,CHANGE_NAME
+		                      ,FILE_PATH)
+            VALUES(SEQ_FNO.NEXTVAL
+                  ,?
+                  ,?
+                  ,?
+                  ,?)
+	</entry>
+	
+	<entry key="increaseCount">
+		UPDATE REVIEWBOARD
+		SET COUNT = COUNT+1
+		WHERE BOARD_NO=?
+		AND STATUS='Y'
+	</entry>
+	
+	<entry key="selectBoard">
+		SELECT BOARD_NO
+			  ,CATEGORY_NAME
+			  ,BOARD_TITLE
+			  ,BOARD_CONTENT
+			  ,USER_ID
+			  ,CREATE_DATE
+		FROM REVIEWBOARD B
+        LEFT JOIN REVIEW_CATEGORY USING(CATEGORY_NO)
+        JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+		WHERE BOARD_NO = ?
+		AND B.STATUS ='Y'
+	</entry>
+	
+	<entry key="selectAttachment">
+		SELECT FILE_NO
+		      ,FILE_NAME
+		      ,CHANGE_NAME
+		      ,FILE_PATH
+		FROM ATTACHMENT
+		WHERE REF_NO = ?
+		AND STATUS = 'Y'
+	</entry>
+	
+	<entry key="updateBoard">
+		UPDATE REVIEWBOARD
+		SET BOARD_TITLE = ? 
+		   ,BOARD_CONTENT = ?
+		   ,CATEGORY_NO = ?
+		WHERE BOARD_NO = ?
+		AND STATUS ='Y'
+	</entry>
+	
+	<entry key="updateAttachment">
+		UPDATE ATTACHMENT 
+		SET FILE_NAME = ?
+			,CHANGE_NAME = ?
+			,FILE_PATH = ?
+			,UPLOAD_DATE = SYSDATE
+		WHERE FILE_NO = ?
+		AND STATUS ='Y'
+	</entry>
+	
+	<entry key="deleteBoard">
+		UPDATE REVIEWBOARD
+		SET STATUS = 'N'
+		WHERE BOARD_NO = ?
+	</entry>
+	
+	<entry key="insertReply">
+		INSERT INTO REPLY_COURSE(REPLY_NO
+						 ,REPLY_CONTENT
+						 ,REF_BNO
+						 ,REPLY_WRITER)
+        VALUES (SEQ_RNO.NEXTVAL
+        		,?
+        		,?
+        		,?)
+	</entry>
+	
+	<entry key="replyList">
+		SELECT REPLY_NO
+		      ,REPLY_CONTENT
+		      ,USER_ID
+		      ,CREATE_DATE
+		FROM REPLY_COURSE R
+		JOIN MEMBER M ON (REPLY_WRITER=USER_NO)
+		WHERE R.STATUS ='Y'
+		AND REF_BNO = ?
+	</entry>
+	
+	<!-- 메인페이지 로드  -->
+	<entry key="selectReviewList">
+		SELECT BOARD_TITLE,BOARD_CONTENT,CHANGE_NAME,FILE_PATH
+		FROM REVIEWBOARD
+		JOIN ATTACHMENT ON (BOARD_NO=REF_NO)
+	</entry>
+	
+	
+</properties>

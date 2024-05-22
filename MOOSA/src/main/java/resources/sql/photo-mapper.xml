@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="selectReviewPhoto">
+		SELECT FILE_PATH||CHANGE_NAME THUMBNAIL,REVIEW_NO
+		FROM PHOTO
+		WHERE FILE_LEVEL=2
+		AND LOD_NO=?
+	</entry>
+</properties>

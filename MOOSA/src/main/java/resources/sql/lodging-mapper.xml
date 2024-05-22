@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- 숙소 카테고리별 조회 -->
+	<entry key="selectLodgingList">SELECT LOD_NO,LOD_NAME,LOD_ADDRESS,FILE_PATH||CHANGE_NAME THUMBNAIL 
+								   FROM LODGING L 
+								   JOIN PHOTO P USING (LOD_NO) 
+						  		   JOIN LOD_CATEGORY LC USING(LOD_CATEGORY_NO) 
+								   WHERE LOD_CATEGORY_NAME = ? 
+								   AND L.STATUS ='Y'
+								   AND P.FILE_LEVEL=1
+	</entry>
+	<!-- 숙소 상세 정보 조회 -->
+	<entry key="selectDetailLodging">SELECT LOD_NO,LOD_NAME,LOD_ADDRESS,LOD_INFO,LOD_CATEGORY_NAME,FILE_PATH||CHANGE_NAME THUMBNAIL
+									FROM LODGING L
+									JOIN PHOTO P USING (LOD_NO) 
+									JOIN LOD_CATEGORY LC USING(LOD_CATEGORY_NO)
+									WHERE LOD_NO=?
+									AND P.FILE_LEVEL=1
+	</entry>
+	<!-- 방 정보 조회 -->
+	<entry key="selectRoom">
+		SELECT ROOM_NO,ROOM_NAME,ROOM_INFO,PHOTO_NO FROM LODGING_DETAIL WHERE LOD_NO=? AND STATUS='Y'
+	</entry>
+	<!-- 방 사진 조회 -->
+	<entry key="selectRoomPhoto">
+		SELECT FILE_PATH||CHANGE_NAME THUMBNAIL,LOD_NO,ROOM_NO
+		FROM PHOTO
+		WHERE LOD_NO=? 
+		AND FILE_LEVEL=4
+	</entry>
+	<!-- 리뷰 조회 -->
+	<entry key="selectEveryReview">SELECT REVIEW_NO,REVIEW_CONTENT,USER_NAME,CREATE_DATE,ROOM_NAME,COUNT
+								FROM REVIEW R
+								JOIN LODGING_DETAIL LD USING(ROOM_NO)
+								LEFT JOIN MEMBER M USING(USER_NO)
+								WHERE R.STATUS='Y'
+								AND LOD_NO=?
+	</entry>
+	<!-- 리뷰 번호 추출 -->
+	<entry key="selectReviewNo">SELECT SEQ_RVN.NEXTVAL RVN FROM DUAL</entry>
+	<!-- 리뷰 글 등록 -->
+	<entry key="insertReview">
+		INSERT INTO REVIEW(REVIEW_NO,REVIEW_CONTENT,USER_NO,CREATE_DATE,STATUS,ROOM_NO,COUNT)VALUES(?,?,?,SYSDATE,'Y',?,?)
+	</entry>
+	<!-- 리뷰 사진등록 -->
+	<entry key="insertReviewPhoto">
+		INSERT INTO PHOTO(PHOTO_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,STATUS,FILE_LEVEL,REVIEW_NO,LOD_NO)
+		VALUES(SEQ_PHN.NEXTVAL,?,?,?,'Y',?,?,?)
+	</entry>
+	<!-- 숙소 데이터 개수 뽑아오기 -->
+	<entry key="listCount">
+		SELECT COUNT(*) COUNT FROM LODGING L JOIN LOD_CATEGORY LD USING(LOD_CATEGORY_NO) WHERE L.STATUS='Y' AND LOD_CATEGORY_NAME = ?
+	</entry>
+	
+	<!-- 메인페이지 로드 -->
+	<entry key="selectLodgingMain">
+		SELECT *
+		FROM(SELECT LOD_NAME,LOD_ADDRESS,FILE_PATH,CHANGE_NAME
+		FROM LODGING
+		JOIN PHOTO USING (LOD_NO))
+		WHERE ROWNUM &lt; 4
+	</entry>
+	
+</properties>

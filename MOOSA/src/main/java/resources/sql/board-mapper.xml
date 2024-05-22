@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- 리스트 전부 가져오기 -->
+	<entry key="boardList">
+	 SELECT *
+	 FROM (
+	     SELECT ROWNUM RNUM,I.*
+	         FROM (
+	            SELECT BOARD_NO
+	                 ,BOARD_TITLE
+	                 ,BOARD_CONTENT
+	                 ,COUNT
+	                 ,LIKES
+	                 ,CREATE_DATE
+	                 ,USER_ID
+	                 ,BOARD_WRITER
+	                 ,CATEGORY_NAME
+	             FROM BOARD B
+	                 JOIN BOARD_CATEGORY USING(CATEGORY_NO)
+	                 JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+	                 WHERE B.STATUS = 'Y'
+	                 ORDER BY CREATE_DATE DESC) I)
+	 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	
+	<!-- 조회수 증가 -->
+	<entry key="boardCount">
+	UPDATE BOARD
+	SET COUNT = COUNT+1
+	WHERE BOARD_NO = ?
+	</entry>
+	
+	<!-- 작성 페이지에서 option에 넣을 카테고리 종류 가져오기 -->
+	<entry key="boardInsert">
+	SELECT CATEGORY_NO,CATEGORY_NAME
+	FROM BOARD_CATEGORY
+	</entry>
+	
+	<!-- 게시글 번호 추출해오기 -->
+	<entry key="selectBoardNo">
+	SELECT SEQ_BNO.NEXTVAL BNO
+	FROM BOARD
+	</entry>
+	
+	<!-- 게시글 제목 내용만 넣기 -->
+	
+	<entry key="contentInsert">
+	INSERT INTO BOARD(
+             BOARD_NO
+            ,BOARD_TITLE
+            ,BOARD_CONTENT
+            ,COUNT
+            ,LIKES
+            ,CREATE_DATE
+            ,STATUS
+            ,BOARD_WRITER
+            ,CATEGORY_NO
+	)
+	VALUES(
+	            ?
+	           ,?
+	           ,?
+	           ,DEFAULT
+	           ,DEFAULT
+	           ,DEFAULT
+	           ,DEFAULT
+	           ,?
+	           ,?
+	)
+	
+	</entry>
+	
+	<!-- 첨부파일만 넣기 && 수정시 새로운 첨부파일 넣기 -->
+	<entry key="atInsert">
+	INSERT INTO B_ATTACHMENT (
+                 FILE_NO
+                ,FILE_NAME
+                ,CHANGE_NAME
+                ,FILE_PATH
+                ,UPLOAD_DATE
+                ,FILE_LEVEL
+                ,STATUS
+                ,REF_NO
+            )
+            VALUES(
+                 SEQ_ANO.NEXTVAL
+                ,?
+                ,?
+                ,?
+                ,DEFAULT
+                ,DEFAULT
+                ,DEFAULT
+                ,?
+            )
+	
+	</entry>
+	
+	<!-- 첨부파일 가져오기 -->
+	<entry key="selectAt">
+	SELECT FILE_NO
+        ,FILE_NAME
+        ,CHANGE_NAME
+        ,FILE_PATH
+	FROM B_ATTACHMENT
+	JOIN BOARD ON(BOARD_NO=REF_NO)
+	WHERE BOARD_NO = ?
+	</entry>
+	
+	<!-- 게시판 상세보기 -->
+	<entry key="boardDetail">
+	SELECT BOARD_NO
+		  ,CATEGORY_NAME
+	      ,BOARD_TITLE
+	      ,BOARD_CONTENT
+	      ,USER_ID
+	      ,CREATE_DATE
+	      ,COUNT
+	      ,LIKES
+	FROM BOARD
+	JOIN BOARD_CATEGORY USING(CATEGORY_NO)
+	JOIN MEMBER ON(BOARD_WRITER=USER_NO)
+	WHERE BOARD_NO=?
+	</entry>
+	
+	
+	<!-- 게시글 수정 -->
+	<entry key="updateContent">
+	UPDATE BOARD
+	SET 
+	    BOARD_TITLE = ?
+	    ,BOARD_CONTENT = ?
+	    ,CATEGORY_NO =?
+	    ,CREATE_DATE = DEFAULT
+	WHERE BOARD_NO = ?
+	AND STATUS = 'Y'
+	
+	</entry>
+	
+	<!-- 첨부파일 update -->	
+	<entry key="updateAt">
+	UPDATE B_ATTACHMENT
+	SET 
+	     FILE_NAME = ?
+	    ,CHANGE_NAME = ?
+	    ,FILE_PATH =?
+	    ,UPLOAD_DATE = DEFAULT
+	WHERE FILE_NO = ?
+	AND STATUS = 'Y'
+	</entry>
+	
+	<!-- 글삭제 -->
+	<entry key="deleteBoard">
+	UPDATE BOARD
+	SET STATUS = 'N'
+	WHERE BOARD_NO = ?
+	
+	</entry>
+	
+	
+	<!-- 글삭제와 함께 저장 돼 있던 첨부파일도 삭제 -->
+	<!-- <entry key="">
+	DELETE FROM B_ATTACHMENT
+    WHERE REF_NO=?
+	</entry> -->
+	
+	
+	<!-- 댓글정보 -->
+	<entry key="selectReply">
+	SELECT  REPLY_NO
+            ,REPLY_CONTENT
+            ,CREATE_DATE
+            ,REPLY_WRITER
+            ,USER_ID
+            ,RECOMMEND
+            ,HATE
+    FROM BOARD_REPLY R
+    JOIN MEMBER ON (USER_NO=REPLY_WRITER)
+    WHERE R.STATUS='Y'
+    AND REF_BNO = ?
+	</entry>
+	
+	<!-- 댓글입력 -->
+	<entry key="insertReply">
+	INSERT INTO BOARD_REPLY (
+                         REPLY_NO
+                        ,REPLY_CONTENT
+                        ,CREATE_DATE
+                        ,STATUS
+                        ,REPLY_WRITER
+                        ,REF_BNO
+                        ,RECOMMEND
+                        ,HATE
+                        )
+                VALUES(
+                        SEQ_RNO.NEXTVAL
+                       ,?
+                       ,DEFAULT
+                       ,DEFAULT
+                       ,?
+                       ,?
+                       ,DEFAULT
+                       ,DEFAULT
+                        )
+	</entry>
+	
+	<!-- 댓글삭제 -->
+	<entry key="replyDelete">
+		UPDATE BOARD_REPLY
+		SET STATUS = 'N'
+		WHERE REPLY_NO = ?
+	</entry>
+	
+	<!-- 게시판 좋아요 취소 -->
+	<entry key="likesCancel">
+		UPDATE BOARD
+		SET LIKES = LIKES +1
+		WHERE BOARD_NO = ?
+	</entry>
+	
+	<!-- 게시판 좋아요 업데이트 -->
+	<entry key="likesUpdate">
+		UPDATE BOARD
+		SET LIKES = LIKES -1
+		WHERE BOARD_NO = ?
+	</entry>
+	
+	<!-- 따봉 도르마무!! -->
+	<entry key="replyCommendCancel">
+		UPDATE BOARD_REPLY
+		SET RECOMMEND = RECOMMEND-1
+		WHERE REPLY_NO = ?
+	</entry>
+	
+	<!-- 추천(따봉) -->
+	<entry key="replyCommend">
+		UPDATE BOARD_REPLY
+		SET RECOMMEND = RECOMMEND+1
+		WHERE REPLY_NO = ?
+	</entry>
+	
+	<!-- 비추천 도르마무 -->
+	<entry key="replyHateCancel">
+		UPDATE BOARD_REPLY
+		SET HATE = HATE-1
+		WHERE REPLY_NO = ?
+	</entry>
+	
+	<!-- 비추천(우~~~) -->
+	<entry key="replyHate">
+		UPDATE BOARD_REPLY
+		SET HATE = HATE+1
+		WHERE REPLY_NO = ?
+	</entry>
+	
+	<!-- 게시글 갯수 가져오기 -->
+	<entry key="listCount">
+		SELECT COUNT(*) AS COUNT
+		FROM BOARD
+		WHERE STATUS = 'Y'
+	</entry>
+	
+	<!-- 검색 (제목으로) -->
+	<entry key="searchTitle">
+		SELECT *
+			 FROM (
+			     SELECT ROWNUM RNUM,I.*
+			         FROM (
+			            SELECT BOARD_NO
+			                 ,BOARD_TITLE
+			                 ,BOARD_CONTENT
+			                 ,COUNT
+			                 ,LIKES
+			                 ,CREATE_DATE
+			                 ,USER_ID
+			                 ,BOARD_WRITER
+			                 ,CATEGORY_NAME
+			             FROM BOARD B
+			                 JOIN BOARD_CATEGORY C ON(B.CATEGORY_NO=C.CATEGORY_NO)
+			                 JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+			                 WHERE B.STATUS = 'Y'
+			                 AND BOARD_TITLE LIKE ?
+			                 ORDER BY CREATE_DATE DESC) I)
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- 검색 (내용으로) -->
+	<entry key="searchContent">
+		SELECT *
+			 FROM (
+			     SELECT ROWNUM RNUM,I.*
+			         FROM (
+			            SELECT BOARD_NO
+			                 ,BOARD_TITLE
+			                 ,BOARD_CONTENT
+			                 ,COUNT
+			                 ,LIKES
+			                 ,CREATE_DATE
+			                 ,USER_ID
+			                 ,BOARD_WRITER
+			                 ,CATEGORY_NAME
+			             FROM BOARD B
+			                 JOIN BOARD_CATEGORY C ON(B.CATEGORY_NO=C.CATEGORY_NO)
+			                 JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+			                 WHERE B.STATUS = 'Y'
+			                 AND BOARD_CONTENT LIKE ?
+			                 ORDER BY CREATE_DATE DESC) I)
+			 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- 검색 (아이디로) -->
+	<entry key="searchUserId">
+		SELECT *
+				 FROM (
+				     SELECT ROWNUM RNUM,I.*
+				         FROM (
+				            SELECT BOARD_NO
+				                 ,BOARD_TITLE
+				                 ,BOARD_CONTENT
+				                 ,COUNT
+				                 ,LIKES
+				                 ,CREATE_DATE
+				                 ,USER_ID
+				                 ,BOARD_WRITER
+				                 ,CATEGORY_NAME
+				             FROM BOARD B
+				                 JOIN BOARD_CATEGORY C ON(B.CATEGORY_NO=C.CATEGORY_NO)
+				                 JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+				                 WHERE B.STATUS = 'Y'
+				                 AND USER_ID = ?
+				                 ORDER BY CREATE_DATE DESC) I)
+				 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- 게시판 카테고리별 정렬 -->
+	<entry key="orderByCategory">
+		 SELECT *
+		 FROM (
+		     SELECT ROWNUM RNUM,I.*
+		         FROM (
+		            SELECT BOARD_NO
+		                 ,BOARD_TITLE
+		                 ,BOARD_CONTENT
+		                 ,COUNT
+		                 ,LIKES
+		                 ,CREATE_DATE
+		                 ,USER_ID
+		                 ,BOARD_WRITER
+		                 ,CATEGORY_NAME
+		             FROM BOARD B
+		                 JOIN BOARD_CATEGORY C ON(B.CATEGORY_NO=C.CATEGORY_NO)
+		                 JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+		                 WHERE B.STATUS = 'Y'
+		                 AND B.CATEGORY_NO = ?
+		                 ORDER BY CREATE_DATE DESC) I)
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	
+	<!-- 카테고리 게시글 갯수 -->
+	<entry key="cListCount">
+		SELECT COUNT(*) AS COUNT
+		FROM BOARD
+		WHERE CATEGORY_NO = ?
+	</entry>
+	
+	<!-- 검색할 게시글 갯수 -->
+	<entry key="sListCount">
+		SELECT COUNT(*) AS COUNT
+		FROM BOARD
+		WHERE CATEGORY_NO = ?
+	</entry>
+	
+	<!-- 메인페이지 첫 로드시 가져올 정보 -->
+	<entry key="indexFirstLoad">
+		SELECT *
+		FROM (
+		    SELECT BOARD_NO
+		          ,BOARD_TITLE
+		          ,BOARD_CONTENT
+		          ,COUNT
+		          ,LIKES
+		          ,CREATE_DATE
+		          ,USER_ID
+		          ,BOARD_WRITER
+		          ,CATEGORY_NAME
+		          ,FILE_PATH
+		          ,CHANGE_NAME
+		          ,RANK() OVER (ORDER BY COUNT DESC, LIKES DESC, BOARD_NO ASC) AS COUNT_RANK
+		    FROM BOARD B
+		        JOIN BOARD_CATEGORY C ON(B.CATEGORY_NO=C.CATEGORY_NO)
+		        JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+		        JOIN B_ATTACHMENT A ON (B.BOARD_NO=A.REF_NO)
+		    WHERE B.STATUS = 'Y'
+		      AND FILE_LEVEL = 1
+		)
+		WHERE COUNT_RANK &lt;= 3
+		AND ROWNUM &lt;= 3
+	</entry>
+	
+	<!-- 메인페이지 첫 로드시 가져올 음악정보 -->
+	<entry key="musicInfo">
+		SELECT FILE_NAME
+		FROM BOARD B
+		      JOIN BOARD_CATEGORY C ON(B.CATEGORY_NO=C.CATEGORY_NO)
+		      JOIN MEMBER ON (USER_NO=BOARD_WRITER)
+		      JOIN B_ATTACHMENT A ON (B.BOARD_NO=A.REF_NO)
+		      WHERE B.STATUS = 'Y'
+		      AND FILE_LEVEL = 2
+	</entry>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</properties>

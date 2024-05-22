@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="loginMember">
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = ?
+		AND USER_PWD = ?
+		AND STATUS = 'Y'
+	</entry>
+	<!-- 회원 정보 수정 -->
+	<entry key="updateMember">
+		UPDATE MEMBER SET PHONE=? , EMAIL=?,
+		ADDRESS=?,MODIFY_DATE = SYSDATE WHERE USER_ID=? AND STATUS='Y'
+	</entry>
+	<!-- 프로필 사진 수정 -->
+	<entry key="updateProfile">
+		UPDATE PHOTO SET ORIGIN_NAME =?,CHANGE_NAME=?,FILE_PATH=? WHERE USER_ID=?
+	</entry>
+	<!-- 프로필 사진 조회 -->
+	<entry key="selectProfile">
+		SELECT FILE_PATH||CHANGE_NAME THUMBNAIL FROM PHOTO
+		WHERE USER_ID = ? AND STATUS='Y' AND FILE_LEVEL=3
+	</entry>
+	<!-- 회원 비밀번호 변경 -->
+	<entry key="updatePwd">
+		UPDATE MEMBER SET USER_PWD=?,MODIFY_DATE = SYSDATE
+		WHERE USER_ID=? AND USER_PWD=? AND STATUS='Y'
+	</entry>
+	<!-- 회원 탈퇴 -->
+	<entry key="deleteMember">
+		UPDATE MEMBER SET STATUS='N', MODIFY_DATE = SYSDATE
+		WHERE USER_ID=?
+	</entry>
+	<entry key="insertMember">
+		INSERT INTO MEMBER(USER_NO
+							,USER_ID
+							,USER_PWD
+							,USER_NAME
+							,PHONE
+							,EMAIL
+							,ADDRESS
+							,GENDER
+							,PHOTO_NO)
+		VALUES(
+		SEQ_UNO.NEXTVAL
+		,?
+		,?
+		,?
+		,?
+		,?
+		,?
+		,?
+		,1)
+
+	</entry>
+
+	<entry key="checkId">
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = ?
+	</entry>
+	<!-- 회원 아이디로 회원 조회 준영-->
+	<entry key="selectMember">
+		SELECT * FROM MEMBER WHERE USER_ID=?
+	</entry>
+	<!-- 프로필사진 등록 -->
+	<entry key="insertProfile">
+		INSERT INTO PHOTO(PHOTO_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,STATUS,FILE_LEVEL,USER_ID)VALUES(SEQ_PHN.NEXTVAL,?,?,?,'Y',?,?)
+	</entry>
+	<!-- 마이페이지에서 나의 리뷰 조회 -->
+	<entry key="selectMyReview">
+		SELECT REVIEW_NO,REVIEW_CONTENT,CREATE_DATE,ROOM_NO,COUNT FROM REVIEW WHERE USER_NO=? AND STATUS='Y'
+	</entry>
+	<!-- 마이페이지에서 나의 리뷰 사진 조회 -->
+	<entry key="selectMyReviewPhoto">
+		SELECT P.PHOTO_NO, ORIGIN_NAME,FILE_PATH||CHANGE_NAME THUMBNAIL , CHANGE_NAME,P.REVIEW_NO FROM PHOTO P JOIN REVIEW R ON(P.REVIEW_NO=R.REVIEW_NO) WHERE R.USER_NO=?
+	</entry>
+	<!-- 마이페이지에서 리뷰 수정을 위한 조회 -->
+	<entry key="selectReview">
+		SELECT REVIEW_NO,REVIEW_CONTENT,CREATE_DATE,ROOM_NO,COUNT FROM REVIEW WHERE REVIEW_NO=? AND STATUS='Y'
+	</entry>
+	<!-- 마이페이지에서 리뷰 사진 수정을 위한 조회 -->
+	<entry key="selectReviewPhoto">
+		SELECT P.PHOTO_NO, ORIGIN_NAME,FILE_PATH||CHANGE_NAME THUMBNAIL , CHANGE_NAME ,P.REVIEW_NO FROM PHOTO P JOIN REVIEW R ON(P.REVIEW_NO=R.REVIEW_NO) WHERE R.REVIEW_NO=?
+	</entry>
+	<!-- 마이페이지에서 리뷰 수정 구문 -->
+	<entry key="updateReview">
+		UPDATE REVIEW SET COUNT =?,REVIEW_CONTENT=? WHERE REVIEW_NO=?
+	</entry>
+	<!-- 마이페이지에서 리뷰 삭제 -->
+	<entry key="deleteReview">
+		UPDATE REVIEW SET STATUS = 'N' WHERE REVIEW_NO=?
+	</entry>
+	<!-- 위시리스트 등록 -->
+	<entry key="addWishList">
+		INSERT INTO WISHLIST(WISHLIST_NO,LOD_NO,USER_NO)
+		VALUES(SEQ_WSL.NEXTVAL,?,?)
+	</entry>
+	<!-- 위시리스트 조회 -->
+	<entry key="selectWishList">
+		SELECT LOD_NO,LOD_NAME,LOD_ADDRESS,LOD_INFO, LOD_CATEGORY_NAME, FILE_PATH||CHANGE_NAME THUMBNAIL
+		FROM WISHLIST W
+		JOIN LODGING L ON(W.LOD_NO=L.LOD_NO)
+		JOIN LOD_CATEGORY LC ON(L.LOD_CATEGORY_NO=LC.LOD_CATEGORY_NO)
+		JOIN PHOTO P ON(L.LOD_NO = P.LOD_NO)
+		WHERE USER_NO=?
+		AND L.STATUS='Y'
+		AND P.FILE_LEVEL=1
+	</entry>
+	<!-- 마이페이지에서 위시리스트 제거 -->
+	<entry key="deleteWishList">
+		DELETE FROM WISHLIST WHERE LOD_NO=? AND USER_NO=?
+	</entry>
+	
+	
+	
+</properties>
