@@ -9,11 +9,11 @@ import com.kh.common.model.vo.Photo;
 
 public class PhotoService {
 
-	public ArrayList<Photo> selectReviewPhoto(int lno) {
-		Connection conn = JDBCTemplate.getConnection();
-		ArrayList<Photo> pList = new PhotoDao().selectReviewPhoto(conn,lno);
-		JDBCTemplate.close(conn); 
-		return pList;
-	}
+//	public ArrayList<Photo> selectReviewPhoto(int lno) {
+//		Connection conn = JDBCTemplate.getConnection();
+//		ArrayList<Photo> pList = new PhotoDao().selectReviewPhoto(conn,lno);
+//		JDBCTemplate.close(conn); 
+//		return pList;
+//	}
 
 }

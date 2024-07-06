@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.kh.member.model.service.MemberService;
+import com.kh.member.model.service.MemServiceImpl;
 
 /**
  * Servlet implementation class DeleteReviewController
@@ -32,7 +32,7 @@ public class DeleteReviewController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
 //		System.out.println("여기 옴");
-		int result = new MemberService().deleteReview(reviewNo);
+		int result = new MemServiceImpl().deleteReview(reviewNo);
 		HttpSession session = request.getSession();
 		String msg = "";
 		if(result>0) {

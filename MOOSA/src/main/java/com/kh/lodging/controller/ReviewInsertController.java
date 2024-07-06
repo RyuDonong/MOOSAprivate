@@ -14,7 +14,7 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 import com.kh.common.MoosaFileRenamePolicy;
 import com.kh.common.model.vo.Photo;
-import com.kh.lodging.model.service.LodgingService;
+import com.kh.lodging.model.service.LodServiceImpl;
 import com.kh.lodging.model.vo.Review;
 import com.oreilly.servlet.MultipartRequest;
 
@@ -85,7 +85,7 @@ public class ReviewInsertController extends HttpServlet {
 				}
 			}
 			
-			int result = new LodgingService().insertReview(r,pList,lno);
+			int result = new LodServiceImpl().insertReview(r,pList,lno);
 			HttpSession session = request.getSession();
 			String msg = "";
 			if(result>0) {

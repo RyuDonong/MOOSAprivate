@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.kh.lodging.model.vo.Lodging" alias="Lodging"/>
+		<typeAlias type="com.kh.lodging.model.vo.Room" alias="Room"/>
+		<typeAlias type="com.kh.lodging.model.vo.Review" alias="Review"/>
+		<typeAlias type="com.kh.common.model.vo.Photo" alias="Photo"/>
+		<typeAlias type="com.kh.common.model.vo.WishList" alias="WishList"/>
+		<typeAlias type="com.kh.member.model.vo.Member" alias="Member"/>
+	</typeAliases>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="MOOSA"/>
+        <property name="password" value="MOOSA"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="/mappers/lod-mapper.xml"/>
+    <mapper resource="/mappers/mem-mapper.xml"/>
+  </mappers>
+</configuration>

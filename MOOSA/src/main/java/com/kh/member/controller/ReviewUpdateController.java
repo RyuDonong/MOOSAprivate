@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.kh.lodging.model.vo.Review;
+import com.kh.member.model.service.MemServiceImpl;
 import com.kh.member.model.service.MemberService;
 
 /**
@@ -32,7 +33,7 @@ public class ReviewUpdateController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
-		Review r = new MemberService().selectReview(reviewNo);
+		Review r = new MemServiceImpl().selectReview(reviewNo);
 		request.setAttribute("r", r);
 		request.getRequestDispatcher("/views/member/updateReview.jsp").forward(request, response);
 	}
@@ -53,7 +54,7 @@ public class ReviewUpdateController extends HttpServlet {
 		r.setCount(count);
 		r.setReviewNo(reviewNo);
 		r.setReviewContent(reviewContent);
-		int result = new MemberService().updateReview(r);
+		int result = new MemServiceImpl().updateReview(r);
 		HttpSession session = request.getSession();
 		if(result>0) {
 			session.setAttribute("alertMsg", "수정되었습니다. 마이페이지에서 다시 확인해주세요");

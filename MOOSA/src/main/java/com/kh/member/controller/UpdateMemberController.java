@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.plaf.multi.MultiMenuItemUI;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 import com.kh.common.MoosaFileRenamePolicy;
 import com.kh.common.model.vo.Photo;
+import com.kh.member.model.service.MemServiceImpl;
 import com.kh.member.model.service.MemberService;
 import com.kh.member.model.vo.Member;
 import com.oreilly.servlet.MultipartRequest;
@@ -73,10 +73,10 @@ public class UpdateMemberController extends HttpServlet {
 				
 			}
 			//데이터 담은 Photo객체와 유저 정보 같이 넘기기
-			int result= new MemberService().updateMember(updateM,p);
+			int result= new MemServiceImpl().updateMember(updateM,p);
 			
 			//정보 갱신을 위한 조회
-			Member updateMember= new MemberService().selectMember(userId);
+			Member updateMember= new MemServiceImpl().selectMember(userId);
 			
 			HttpSession session = request.getSession();
 			String msg = "";

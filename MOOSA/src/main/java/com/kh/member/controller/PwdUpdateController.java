@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.kh.member.model.service.MemberService;
+import com.kh.member.model.service.MemServiceImpl;
+import com.kh.member.model.vo.Member;
 
 /**
  * Servlet implementation class PwdUpdateController
@@ -43,8 +44,12 @@ public class PwdUpdateController extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
 		String updatePwd = request.getParameter("updatePwd");
+		// 이미 jsp에서 유효성 검사를 하고넘어 왔기때문에 업데이트할 비밀번호를 바로 VO에 담아 보냄
+		Member m = new Member();
+		m.setUserId(userId);
+		m.setUserPwd(updatePwd);
 		
-		int result = new MemberService().updatePwd(userId,userPwd,updatePwd);
+		int result = new MemServiceImpl().updatePwd(m);
 		HttpSession session = request.getSession();
 		if(result>0) {
 			session.setAttribute("alertMsg", "비밀번호가 변경되었습니다. 다시 로그인 해주세요.");

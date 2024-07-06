@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.kh.common.model.vo.Photo;
 import com.kh.lodging.model.vo.Review;
+import com.kh.member.model.service.MemServiceImpl;
 import com.kh.member.model.service.MemberService;
 
 /**
@@ -35,8 +36,8 @@ public class MyReviewController extends HttpServlet {
 		
 		int userNo = Integer.parseInt(request.getParameter("userNo"));
 //		System.out.println(userNo);
-		ArrayList<Review> rList = new MemberService().selectMyReview(userNo);
-		ArrayList<Photo> pList = new MemberService().selectMyReviewPhoto(userNo);
+		ArrayList<Review> rList = new MemServiceImpl().selectMyReview(userNo);
+		ArrayList<Photo> pList = new MemServiceImpl().selectMyReviewPhoto(userNo);
 		request.setAttribute("rList", rList);
 		request.setAttribute("pList", pList);
 		request.getRequestDispatcher("/views/member/myReview.jsp").forward(request, response);

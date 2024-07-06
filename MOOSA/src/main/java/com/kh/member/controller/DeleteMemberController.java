@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.kh.member.model.service.MemberService;
+import com.kh.member.model.service.MemServiceImpl;
 
 /**
  * Servlet implementation class DeleteMemberController
@@ -40,7 +40,7 @@ public class DeleteMemberController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String userId = request.getParameter("userId");
-		int result = new MemberService().deleteMember(userId);
+		int result = new MemServiceImpl().deleteMember(userId);
 		HttpSession session = request.getSession();
 		if(result>0) {
 			session.removeAttribute("loginUser");

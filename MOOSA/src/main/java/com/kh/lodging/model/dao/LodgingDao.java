@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.apache.ibatis.session.SqlSession;
+
 import com.kh.common.JDBCTemplate;
 import com.kh.common.model.vo.Photo;
 import com.kh.lodging.model.vo.Lodging;
@@ -32,207 +34,56 @@ public class LodgingDao {
 	}
 
 	//숙소 카테고리별 조회 
-	public ArrayList<Lodging> selectLodgingList(Connection conn,String category) {
+	public ArrayList<Lodging> selectLodgingList(SqlSession sqlSession,String category) {
 
-		ArrayList<Lodging> list =new ArrayList<>();
-		String sql = prop.getProperty("selectLodgingList");
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,category);
-			
-			rset = pstmt.executeQuery();
-			
-			while(rset.next()) {
-				list.add(new Lodging(rset.getInt("LOD_NO")
-									,rset.getString("LOD_NAME")
-									,rset.getString("LOD_ADDRESS")
-									,rset.getString("THUMBNAIL")));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
-		}
+		ArrayList<Lodging> list = (ArrayList)sqlSession.selectList("lodMapper.selectLodgingList", category);
 		return list;
 	}
 
 	//숙소 상세 정보 
-	public Lodging selectDetailLodging(Connection conn, int lno) {
-		Lodging lod = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String sql = prop.getProperty("selectDetailLodging");
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, lno);
-			rset=pstmt.executeQuery();
-			if(rset.next()) {
-				lod = new Lodging(rset.getInt("LOD_NO")
-								 ,rset.getString("LOD_NAME")
-								 ,rset.getString("LOD_ADDRESS")
-								 ,rset.getString("LOD_INFO")
-								 ,rset.getString("LOD_CATEGORY_NAME")
-								 ,rset.getString("THUMBNAIL"));
-				
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
-		}
+	public Lodging selectDetailLodging(SqlSession sqlSession, int lno) {
+		Lodging lod = sqlSession.selectOne("lodMapper.selectDetailLodging", lno);
 		return lod;
 	}
+	
 	//숙소 방 정보 조회
-	public ArrayList<Room> selectRoom(Connection conn, int lno) {
-		ArrayList<Room> rList = new ArrayList<>();
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String sql = prop.getProperty("selectRoom");
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, lno);
-			rset = pstmt.executeQuery();
-			while(rset.next()) {
-				Room r = new Room(rset.getInt("ROOM_NO")
-								 ,rset.getString("ROOM_NAME")
-								 ,rset.getString("ROOM_INFO")
-								 ,rset.getInt("PHOTO_NO"));
-				rList.add(r);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
-		}
-		return rList;
+	public ArrayList<Room> selectRoom(SqlSession sqlSession, int lno) {
+		return (ArrayList)sqlSession.selectList("lodMapper.selectRoom",lno);
 	}
+	
 	//숙소 리뷰 조회
-	public ArrayList<Review> selectEveryReview(Connection conn, int lno) {
-		ArrayList<Review> list = new ArrayList<>();
-		PreparedStatement pstmt = null;
-		ResultSet rset =null;
-		String sql = prop.getProperty("selectEveryReview");
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, lno);
-			rset=pstmt.executeQuery();
-			while(rset.next()) {
-				list.add(new Review(rset.getInt("REVIEW_NO")
-								   ,rset.getString("REVIEW_CONTENT")
-								   ,rset.getString("USER_NAME")
-								   ,rset.getDate("CREATE_DATE")
-								   ,rset.getString("ROOM_NAME")
-								   ,rset.getInt("COUNT")));
-				
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return list;
+	public ArrayList<Review> selectEveryReview(SqlSession sqlSession, int lno) {
+		return (ArrayList)sqlSession.selectList("lodMapper.selectEveryReview", lno);
 	}
 
 	//리뷰 번호 추출 메소드
-	public int selectReviewNo(Connection conn) {
-		int reviewNo = 0;
-		ResultSet rset = null;
-		Statement stmt = null;
-		String sql = prop.getProperty("selectReviewNo");
-		try {
-			stmt=conn.createStatement();
-			rset = stmt.executeQuery(sql);
-			if(rset.next()) {
-				reviewNo=rset.getInt("RVN");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(stmt);
-		}
-		return reviewNo;
+	public int selectReviewNo(SqlSession sqlSession) {
+		
+		return sqlSession.selectOne("lodMapper.selectReviewNo");
 	}
 
 	//리뷰 글 작성메소드
-	public int insertReview(Connection conn, Review r) {
-		int result = 0;
-		PreparedStatement pstmt = null;
-		String sql = prop.getProperty("insertReview");
-		try {
-			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, r.getReviewNo());
-			pstmt.setString(2, r.getReviewContent());
-			pstmt.setInt(3, Integer.parseInt(r.getUserNo()));
-			pstmt.setInt(4, Integer.parseInt(r.getRoomNo()));
-			pstmt.setInt(5, r.getCount());
-			result = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			JDBCTemplate.close(pstmt);
-		}
-		return result;
+	public int insertReview(SqlSession sqlSession, Review r) {
+		
+		return sqlSession.insert("lodMapper.insertReview",r);
 	}
 
-	public int insertReviewPhoto(Connection conn, ArrayList<Photo> pList, int reviewNo,int lno) {
-		PreparedStatement pstmt = null;
+	public int insertReviewPhoto(SqlSession sqlSession, ArrayList<Photo> pList, int reviewNo,int lno) {
 		int result = 1; //사진이 여러개 왔을때 하나라도 0이라면 0이 되게 처리
-		String sql = prop.getProperty("insertReviewPhoto");
-			try {
-				for(Photo p : pList) {
-					pstmt=conn.prepareStatement(sql);
-					pstmt.setString(1, p.getOriginName());
-					pstmt.setString(2, p.getChangeName());
-					pstmt.setString(3, p.getFilePath());
-					pstmt.setInt(4, p.getFileLevel());
-					pstmt.setInt(5, reviewNo);
-					pstmt.setInt(6, lno);
-					result *= pstmt.executeUpdate();
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}finally {
-				JDBCTemplate.close(pstmt);
+			for(Photo p : pList) {
+				//사진 객체마다 reviewNo넣어 주고
+				p.setReviewNo(reviewNo);
+				//사진 객체마다 숙소 식별자 번호 넣기 (숙소 이름을 뽑기 위해 String으로 선언했으나 자료를 넣을때는 int로 형변환 해야함)
+				p.setLodNo(Integer.toString(lno));
+				//mybatis실행해서 결과값 곱해 넣기
+				result *= sqlSession.insert("lodMapper.insertReviewPhoto", p);
 			}
 		return result;
 	}
+	
 	//방 사진 조회 메소드
-	public ArrayList<Photo> selectRoomPhoto(Connection conn, int lno) {
-		ResultSet rset = null;
-		PreparedStatement pstmt = null;
-		String sql = prop.getProperty("selectRoomPhoto");
-		ArrayList<Photo> rpList = new ArrayList<>();
-		try {
-			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, lno);
-			rset = pstmt.executeQuery();
-			while(rset.next()) {
-				rpList.add(new Photo(rset.getString("THUMBNAIL")
-									,rset.getString("LOD_NO")
-									,rset.getInt("ROOM_NO")));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
-		}
-		
-		return rpList;
+	public ArrayList<Photo> selectRoomPhoto(SqlSession sqlSession, int lno) {
+		return (ArrayList)sqlSession.selectList("lodMapper.selectRoomPhoto",lno);
 	}
 
 	//========== 메인페이지 로드 =================
@@ -261,5 +112,9 @@ public class LodgingDao {
 		return lList;
 	}
 	
+	//방 리뷰 사진 조회
+	public ArrayList<Photo> selectReviewPhoto(SqlSession sqlSession, int lno) {
+		return (ArrayList)sqlSession.selectList("lodMapper.selectReviewPhoto", lno);
+	}
 	
 }

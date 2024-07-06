@@ -9,6 +9,13 @@ public class WishList {
 	public WishList() {
 		super();
 	}
+	
+	public WishList(int lodNo, int userNo) {
+		super();
+		this.lodNo = lodNo;
+		this.userNo = userNo;
+	}
+
 	public WishList(int wishListNo, int lodNo, int userNo) {
 		super();
 		this.wishListNo = wishListNo;

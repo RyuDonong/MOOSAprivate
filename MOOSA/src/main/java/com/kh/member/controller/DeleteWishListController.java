@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.kh.member.model.service.MemberService;
+import com.kh.member.model.service.MemServiceImpl;
 
 /**
  * Servlet implementation class DeleteWishListController
@@ -33,7 +33,7 @@ public class DeleteWishListController extends HttpServlet {
 		int userNo = Integer.parseInt(request.getParameter("userNo"));
 		String[] deleteWishList =request.getParameterValues("deleteWishList");
 		
-		int result = new MemberService().deleteWishList(userNo,deleteWishList);
+		int result = new MemServiceImpl().deleteWishList(userNo,deleteWishList);
 		HttpSession session = request.getSession();
 		String msg = "";
 		if(result>0) {

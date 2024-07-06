@@ -43,7 +43,7 @@
 							,GENDER
 							,PHOTO_NO)
 		VALUES(
-		SEQ_UNO.NEXTVAL
+		SEQ_MNO.NEXTVAL
 		,?
 		,?
 		,?

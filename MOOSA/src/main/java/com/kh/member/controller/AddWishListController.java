@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kh.common.model.vo.WishList;
 import com.kh.lodging.model.vo.Lodging;
+import com.kh.member.model.service.MemServiceImpl;
 import com.kh.member.model.service.MemberService;
 
 /**
@@ -34,7 +36,9 @@ public class AddWishListController extends HttpServlet {
 //		System.out.println("여기 옴");
 		int lno = Integer.parseInt(request.getParameter("lno"));
 		int userNo = Integer.parseInt(request.getParameter("userNo"));
-		ArrayList<Lodging> list = new MemberService().selectWishList(userNo);//중복 확인 하기 위한 조회 
+		//등록을 위해 wishList VO에 담기
+		WishList wishList = new WishList(lno,userNo);
+		ArrayList<Lodging> list = new MemServiceImpl().selectWishList(userNo);//중복 확인 하기 위한 조회 
 		//중복이라면 제거 하기
 		int result = 0;//결과값 받을 변수 준비
 		if(!list.isEmpty()) {//조회해온 데이터가 있다면 
@@ -45,15 +49,15 @@ public class AddWishListController extends HttpServlet {
 				}
 			}
 			if(flag) {//조회해온 숙소 있다면 
-				result = new MemberService().deleteWishList(userNo, lno);
+				result = new MemServiceImpl().deleteWishList(wishList);
 //				System.out.println("==lno"+lno);
 			}else {//조회해온 숙소가 없다면 
-				result = new MemberService().addWishList(lno,userNo);
+				result = new MemServiceImpl().addWishList(wishList);
 //				System.out.println("!=lno"+lno);
 			}
 			
 		}else {//조회 해온 데이터가 없다면
-			result = new MemberService().addWishList(lno,userNo);
+			result = new MemServiceImpl().addWishList(wishList);
 		}
 		
 //		System.out.println(lno);

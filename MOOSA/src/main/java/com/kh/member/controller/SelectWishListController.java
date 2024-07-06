@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.lodging.model.vo.Lodging;
-import com.kh.member.model.service.MemberService;
+import com.kh.member.model.service.MemServiceImpl;
 
 /**
  * Servlet implementation class SelectWishListController
@@ -32,7 +32,7 @@ public class SelectWishListController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int userNo = Integer.parseInt(request.getParameter("userNo"));
-		ArrayList<Lodging> list = new MemberService().selectWishList(userNo);
+		ArrayList<Lodging> list = new MemServiceImpl().selectWishList(userNo);
 //		System.out.println(list);
 		request.setAttribute("list", list);
 //		System.out.println(list);

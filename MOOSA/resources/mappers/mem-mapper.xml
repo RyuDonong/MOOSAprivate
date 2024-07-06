@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberMapper">
+	<resultMap type="Lodging" id="lodgingResultSet">
+		<result column="LOD_NO" property="lodNo"/>
+		<result column="LOD_NAME" property="lodName"/>
+		<result column="LOD_INFO" property="lodInfo"/>
+		<result column="LOD_ADDRESS" property="lodAddress"/>
+		<result column="LOD_CATEGORY_NAME" property="category"/>
+		<result column="THUMBNAIL" property="Thumbnail"/>
+	</resultMap>
+	<resultMap type="Review" id="reviewResultSet">
+		<result column="REVIEW_NO" property="reviewNo"/>
+		<result column="REVIEW_CONTENT" property="reviewContent"/>
+		<result column="USER_NAME" property="userNo"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="ROOM_NAME" property="roomNo"/>
+		<result column="COUNT" property="count"/>
+	</resultMap>
+	<resultMap type="Photo" id="photoResultSet">
+		<result column="THUMBNAIL" property="thumbnail"/>
+		<result column="LOD_NO" property="lodNo"/>
+		<result column="ROOM_NO" property="roomNo"/>
+		<result column="REVIEW_NO" property="reviewNo"/>
+	</resultMap>
+	<resultMap type="Member" id="memberResultSet">
+		<result column="USER_NO" property="userNo"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="USER_PWD" property="userPwd"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="PHONE" property="phone"/>
+		<result column="EMAIL" property="email"/>
+		<result column="ADDRESS" property="address"/>
+		<result column="ENROLL_DATE" property="enrollDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="GENDER" property="gender"/>
+		<result column="GRADE_NO" property="gradeNo"/>
+		<result column="PHOTO_NO" property="photoNo"/>
+		<result column="THUMBNAIL" property="thumbnail"/>
+	</resultMap>
+	
+	<!-- 마이페이지에서 위시리스트 조회 -->
+	<select id="selectWishList" parameterType="_int" resultMap="lodgingResultSet">
+		SELECT LOD_NO,LOD_NAME,LOD_ADDRESS,LOD_INFO, LOD_CATEGORY_NAME, FILE_PATH||CHANGE_NAME THUMBNAIL
+		FROM WISHLIST W
+		JOIN LODGING L ON(W.LOD_NO=L.LOD_NO)
+		JOIN LOD_CATEGORY LC ON(L.LOD_CATEGORY_NO=LC.LOD_CATEGORY_NO)
+		JOIN PHOTO P ON(L.LOD_NO = P.LOD_NO)
+		WHERE USER_NO=#{userNo}
+		AND L.STATUS='Y'
+		AND P.FILE_LEVEL=1
+	</select>
+	
+	<!-- 위시리스트 추가 -->
+	<insert id="addWishList">
+		INSERT INTO WISHLIST(WISHLIST_NO,LOD_NO,USER_NO)
+		VALUES(SEQ_WSL.NEXTVAL,#{lodNo},#{userNo})
+	</insert>
+	
+	<!-- 위시리스트 삭제 -->
+	<delete id="deleteWishList">
+		DELETE FROM WISHLIST WHERE LOD_NO=#{lodNo} AND USER_NO=#{userNo}
+	</delete>
+	
+	<!-- 마이리뷰 조회 -->
+	<select id="selectMyReview" parameterType="_int" resultMap="reviewResultSet">
+		SELECT REVIEW_NO,REVIEW_CONTENT,CREATE_DATE,ROOM_NO,COUNT FROM REVIEW WHERE USER_NO=#{userNo} AND STATUS='Y'
+	</select>
+	
+	<!-- 리뷰 사진 조회 -->
+	<select id="selectMyReviewPhoto" parameterType="_int" resultMap="photoResultSet">
+		SELECT P.PHOTO_NO, ORIGIN_NAME,FILE_PATH||CHANGE_NAME THUMBNAIL , CHANGE_NAME,P.REVIEW_NO FROM PHOTO P JOIN REVIEW R ON(P.REVIEW_NO=R.REVIEW_NO) WHERE R.USER_NO=#{userNo}
+	</select>
+	
+	<!-- 리뷰 삭제 -->
+	<update id="deleteReview" parameterType="_int">
+		UPDATE REVIEW SET STATUS = 'N' WHERE REVIEW_NO=#{reviewNo}
+	</update>
+	
+	<!-- 리뷰 수정을 위한 조회 -->
+	<select id="selectReview">
+		SELECT REVIEW_NO,REVIEW_CONTENT,CREATE_DATE,ROOM_NO,COUNT FROM REVIEW WHERE REVIEW_NO=? AND STATUS='Y'
+	</select>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updatePwd">
+		UPDATE MEMBER SET USER_PWD=#{userPwd},MODIFY_DATE = SYSDATE
+		WHERE USER_ID=#{userId} AND STATUS='Y'
+	</update>
+	
+	<!-- 내정보 수정 -->
+	<update id="updateMember" parameterType="Member">
+		UPDATE MEMBER SET PHONE=#{phone} , EMAIL=#{email},
+		ADDRESS=#{address},MODIFY_DATE = SYSDATE WHERE USER_ID=#{userId} AND STATUS='Y'
+	</update> 
+	
+	<!-- 프로필 사진 수정 -->
+	<update id="updateProfile" parameterType="Photo">
+		UPDATE PHOTO SET ORIGIN_NAME =#{originName},CHANGE_NAME=#{changeName},FILE_PATH=#{filePath} WHERE USER_ID=#{userId}
+	</update>
+	
+	<!-- 프로필사진 처음 넣기 -->
+	<insert id="insertProfile">
+		INSERT INTO PHOTO(PHOTO_NO,ORIGIN_NAME,CHANGE_NAME,FILE_PATH,STATUS,FILE_LEVEL,USER_ID)VALUES(SEQ_PHN.NEXTVAL,#{originName},#{changeName},#{filePath},'Y',#{fileLevel},#{userId})
+	</insert>
+	
+	<!-- 프로필 변경후 세션에 담기 위한 조회 -->
+	<select id="selectMember">
+		SELECT * FROM MEMBER WHERE USER_ID=#{userId}
+	</select>
+	
+	<!-- 리뷰수정 -->
+	<update id="updateReview">
+		UPDATE REVIEW SET COUNT =#{count},REVIEW_CONTENT=#{reviewContent} WHERE REVIEW_NO=#{reviewNo}
+	</update>
+	
+</mapper>

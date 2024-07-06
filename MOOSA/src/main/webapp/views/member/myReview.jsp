@@ -69,8 +69,8 @@
 														</colgroup> -->
 														<thead>
 															<tr>
-																<th>선택</th>
-																<th>별점</th>
+																<th style="width:70px">선택</th>
+																<th style="width:140px">별점</th>
 																<th>리뷰 내용</th>
 															</tr>
 														</thead>
