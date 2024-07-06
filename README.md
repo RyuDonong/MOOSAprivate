@@ -15,12 +15,19 @@ MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, �
 2024.05.01 ~ 2024.05.16
 
 - Environment
+
 운영체제	: Window, OS
+
 사용언어	: Front - JavaScript, jQuery, HTML, CSS, Ajax
+
 : Back - Java / View - Template - strongly-typed
+
 FrameWork/Library	: ojdbc, cos, jstl 
+
 DB	: Oracle / SQL Developer
+
 Tool	: Eclipse, Visual Studio Code  
+
 Collaboration	: GitHub
 
 ### View  
