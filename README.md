@@ -16,19 +16,19 @@ MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, �
 
 - Environment
 
-운영체제	: Window, OS
+  운영체제	: Window, OS
 
-사용언어	: Front - JavaScript, jQuery, HTML, CSS, Ajax
+  사용언어	: Front - JavaScript, jQuery, HTML, CSS, Ajax
 
-: Back - Java / View - Template - strongly-typed
+  : Back - Java / View - Template - strongly-typed
 
-FrameWork/Library	: ojdbc, cos, jstl 
+  FrameWork/Library	: ojdbc, cos, jstl 
 
-DB	: Oracle / SQL Developer
+  DB	: Oracle / SQL Developer
 
-Tool	: Eclipse, Visual Studio Code  
+  Tool	: Eclipse, Visual Studio Code  
 
-Collaboration	: GitHub
+  Collaboration	: GitHub
 
 ### View  
 <img width="1710" alt="스크린샷 2024-07-06 오후 2 13 40" src="https://github.com/RyuDonong/MOOSAprivate/assets/168408760/34c0c41b-23a3-4445-a72b-bba261bb2a80">
