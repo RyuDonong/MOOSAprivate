@@ -43,7 +43,7 @@ MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, �
 ##### DB에 저장된 카테고리별 숙소 조회(Ajax 사용하여 비동기로 카테고리별 조회)
 마우스 호버시 해당하는 숙소 이름, 위치 확인 가능 
 (로그인시 위시리스트 등록, 해제 버튼 활성화 비로그인시 위시리스트 버튼 비활성화)
-
+<a href="https://github.com/RyuDonong/MOOSAprivate/blob/da636a4f5ca7e35c913a824cdef9292244529881/MOOSA/src/main/webapp/views/lod/lodListView.jsp#L57">코드 보기</a>
 
 ### 숙소 클릭시
 <img width="1710" alt="스크린샷 2024-07-06 오후 1 47 09" src="https://github.com/RyuDonong/MOOSAprivate/assets/168408760/7f061765-03ee-44bf-9d1c-fa987f2a6af0">
