@@ -43,7 +43,10 @@ MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, �
 ##### DB에 저장된 카테고리별 숙소 조회(Ajax 사용하여 비동기로 카테고리별 조회)
 마우스 호버시 해당하는 숙소 이름, 위치 확인 가능 
 (로그인시 위시리스트 등록, 해제 버튼 활성화 비로그인시 위시리스트 버튼 비활성화)
-<a href="https://github.com/RyuDonong/MOOSAprivate/blob/da636a4f5ca7e35c913a824cdef9292244529881/MOOSA/src/main/webapp/views/lod/lodListView.jsp#L57">코드 보기</a>
+
+<a href="https://github.com/RyuDonong/MOOSAprivate/blob/da636a4f5ca7e35c913a824cdef9292244529881/MOOSA/src/main/webapp/views/lod/lodListView.jsp#L57">비동기 조회 코드 보기</a>
+
+<a href="https://github.com/RyuDonong/MOOSAprivate/blob/ef5693dd928219d08580e9bdd30a4eb88b5edcf5/MOOSA/src/main/java/com/kh/member/controller/AddWishListController.java#L35">위시리스트 등록 코드 보기</a>
 
 ### 숙소 클릭시
 <img width="1710" alt="스크린샷 2024-07-06 오후 1 47 09" src="https://github.com/RyuDonong/MOOSAprivate/assets/168408760/7f061765-03ee-44bf-9d1c-fa987f2a6af0">
@@ -51,7 +54,9 @@ MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, �
 
 
 ##### 해당하는 숙소 상세페이지 이동 
-해당하는 숙소 위치 KaKao지도 Api로 지도 보여주기, 숙소 등록 사용자가 입력한 숙소 설명 보여주기, 숙소 방 정보 조회, 고객리뷰 작성, 조회 
+해당하는 숙소 위치 Kakao지도 Api로 지도 보여주기, 숙소 등록 사용자가 입력한 숙소 설명 보여주기, 숙소 방 정보 조회, 고객리뷰 작성, 조회 
+
+<a href="https://github.com/RyuDonong/MOOSAprivate/blob/ef5693dd928219d08580e9bdd30a4eb88b5edcf5/MOOSA/src/main/webapp/views/lod/lodDetailView.jsp#L200">Kakao지도 Api코드 보기</a> 
 
 ### 상단 회원 정보탭 클릭시 
 <img width="1706" alt="스크린샷 2024-07-06 오후 2 39 51" src="https://github.com/RyuDonong/MOOSAprivate/assets/168408760/b1d065f3-eea7-4765-a0b5-2714cb737ecd">
@@ -84,6 +89,7 @@ MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, �
 <img width="1710" alt="스크린샷 2024-07-06 오후 1 50 20" src="https://github.com/RyuDonong/MOOSAprivate/assets/168408760/849a37d3-2e2a-4d99-af42-a60e8115c547">
 
 ##### 등록되었던 위시리스트 조회가능, 여러 위시리스트 선택하여 삭제 가능 
+
 
 ### 나의 리뷰 탭 클릭시
 <img width="1710" alt="스크린샷 2024-07-06 오후 1 50 34" src="https://github.com/RyuDonong/MOOSAprivate/assets/168408760/605ba05a-e00f-458b-8380-1d2778f398ab">
