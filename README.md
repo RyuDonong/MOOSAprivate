@@ -1,5 +1,6 @@
 # MOOSA
 MOOSA 사이트는 웹사이트 하나에서 제주도의 모든 여행거리, 먹거리, 숙소 에 대한 정보를 모두 제공하는 사이트 입니다. 
+
 <img width="599" alt="MOOSA" src="https://github.com/user-attachments/assets/6c36be21-57bd-4739-add4-e1ac466c32c7">
 
 
